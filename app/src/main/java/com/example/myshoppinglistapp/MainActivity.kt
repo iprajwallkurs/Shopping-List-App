@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center
                     ){
                         Button(onClick = {},
-                            modifier = Modifier.align ( Alignment.CenterHorizontally )
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
                             Text(text = "Add Item ")
                         }
