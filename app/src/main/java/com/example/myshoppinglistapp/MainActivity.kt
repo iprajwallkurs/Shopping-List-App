@@ -30,11 +30,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ){
                     Column (
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center
+                             modifier = Modifier.fillMaxSize(),
+                             verticalArrangement = Arrangement.Center
                     ){
                         Button(onClick = {},
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
                             Text(text = "Add Item ")
                         }
