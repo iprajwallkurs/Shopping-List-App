@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.ComposableOpenTarget
 import androidx.compose.runtime.getValue
@@ -26,26 +30,41 @@ data class ShoppingItem(val id: Int,
                         var isEditing : Boolean = false
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
 fun ShoppingListApp(){
     var sItems by remember { mutableStateOf(listOf<ShoppingItem>()) }
+    var showDialog by remember { mutableStateOf(false) }
+
+
 
     Column (
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ){
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {},
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+
+        Button(
+              onClick = {showDialog = true },
+              modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(text = "Add Item ")
         }
         LazyColumn (
             modifier = Modifier.fillMaxSize().padding(16.dp)
         ){
-            items(sItems){ }
+            items(sItems){
+
+            }
 
         }
+    }
+    if(showDialog){
+        BasicAlertDialog(onDismissRequest = { showDialog = false },) //This is similar to AlertDialog
+        {
+            Text("hi")
+        }
+
     }
 }
