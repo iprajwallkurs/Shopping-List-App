@@ -51,6 +51,8 @@ fun ShoppingListApp(){
         ) {
             Text(text = "Add Item ")
         }
+        //LazyColumn is similar to a loop
+
         LazyColumn (
             modifier = Modifier.fillMaxSize().padding(16.dp)
         ){
