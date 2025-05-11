@@ -48,11 +48,10 @@ fun ShoppingListApp(){
         Button(
               onClick = {showDialog = true },
               modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
+        ){
             Text(text = "Add Item ")
         }
-        //LazyColumn is similar to a loop
-
+        //LazyColumn is similar to a loop but not exactly a loop
         LazyColumn (
             modifier = Modifier.fillMaxSize().padding(16.dp)
         ){
@@ -63,7 +62,7 @@ fun ShoppingListApp(){
         }
     }
     if(showDialog){
-        BasicAlertDialog(onDismissRequest = { showDialog = false },) //This is similar to AlertDialog
+        BasicAlertDialog(onDismissRequest = { showDialog = false },) // This is similar to AlertDialog
         {
             Text("hi")
         }
