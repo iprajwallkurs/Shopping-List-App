@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +14,7 @@ import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.ComposableOpenTarget
 import androidx.compose.runtime.getValue
@@ -30,12 +32,14 @@ data class ShoppingItem(val id: Int,
                         var isEditing : Boolean = false
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+//@OptIn(ExperimentalMaterial3Api::class)// because its still in experiment or trial
 @Composable
 
 fun ShoppingListApp(){
     var sItems by remember { mutableStateOf(listOf<ShoppingItem>()) }
     var showDialog by remember { mutableStateOf(false) }
+    var itemName by remember { mutableStateOf(" ") }
+    var itemQuantity by remember { mutableStateOf(" ") }
 
 
 
@@ -62,10 +66,26 @@ fun ShoppingListApp(){
         }
     }
     if(showDialog){
-        BasicAlertDialog(onDismissRequest = { showDialog = false },) // This is similar to AlertDialog
-        {
-            Text("hi")
-        }
+        AlertDialog(onDismissRequest = {showDialog = false},
+            confirmButton = {},
+            title = {Text("Add Shopping Item")},
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = itemName ,
+                        onValueChange = { itemName = it},
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = itemQuantity ,
+                        onValueChange = { itemQuantity = it},
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    )
+                }
+            })
+
 
     }
 }
