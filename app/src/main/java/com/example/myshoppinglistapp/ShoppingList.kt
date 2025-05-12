@@ -32,7 +32,7 @@ data class ShoppingItem(val id: Int,
                         var isEditing : Boolean = false
 )
 
-@OptIn(ExperimentalMaterial3Api::class)// because its still in experiment or trial
+@OptIn(ExperimentalMaterial3Api::class)// because its still in experiment or beta testing phase
 @Composable
 
 fun ShoppingListApp(){
