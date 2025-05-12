@@ -32,7 +32,7 @@ data class ShoppingItem(val id: Int,
                         var isEditing : Boolean = false
 )
 
-@OptIn(ExperimentalMaterial3Api::class)// because its still in experiment or beta testing phase
+//@OptIn(ExperimentalMaterial3Api::class)// because its still in experiment or beta testing phase
 @Composable
 
 fun ShoppingListApp(){
@@ -82,7 +82,7 @@ fun ShoppingListApp(){
                         onValueChange = { itemQuantity = it},
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth().padding(8.dp)
-                    )
+                    )// This type of Alert Dialog Box gives many options
                 }
             })
 
