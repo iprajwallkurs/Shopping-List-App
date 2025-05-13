@@ -31,11 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import kotlin.math.sin
 
 data class ShoppingItem(val id: Int,
                         var name: String,
-                        var quality: Int,
+                        var quantity: Int,
                         var isEditing : Boolean = false
 )
 
@@ -45,10 +44,8 @@ data class ShoppingItem(val id: Int,
 fun ShoppingListApp(){
     var sItems by remember { mutableStateOf(listOf<ShoppingItem>()) }
     var showDialog by remember { mutableStateOf(false) }
-    var itemName by remember { mutableStateOf(" ") }
-    var itemQuantity by remember { mutableStateOf(" ") }
-
-
+    var itemName by remember { mutableStateOf("") }
+    var itemQuantity by remember { mutableStateOf("") }
 
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -67,9 +64,9 @@ fun ShoppingListApp(){
             modifier = Modifier.fillMaxSize().padding(16.dp)
         ){
             items(sItems){
+                ShoppingListItems(it,{},{})
 
             }
-
         }
     }
     if(showDialog){
@@ -82,7 +79,7 @@ fun ShoppingListApp(){
                            val newItem = ShoppingItem(
                                id = sItems.size+1,
                                     name = itemName,
-                                    quality = itemQuantity.toInt()
+                                    quantity = itemQuantity.toInt()
                            )
                            sItems = sItems + newItem
                            showDialog = false
@@ -117,17 +114,17 @@ fun ShoppingListApp(){
 }
 
 @Composable
+
 fun ShoppingListItems(
     item: ShoppingItem,
     onEditClick: () -> Unit, //lambda function
     onDeleteClick: () -> Unit,
 ){
     Row (modifier = Modifier.padding(8.dp).fillMaxWidth().border(
-        border = BorderStroke(2.dp, Color(0XFF018786)),
-        shape = RoundedCornerShape(20)
-    )){
+         border = BorderStroke(2.dp, Color(0XFF018786)),
+         shape = RoundedCornerShape(20)
+    )
+    ){
         Text(text = item.name, modifier = Modifier.padding(8.dp))
-
     }
-
 }
