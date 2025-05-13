@@ -117,7 +117,7 @@ fun ShoppingListApp(){
 
 fun ShoppingListItems(
     item: ShoppingItem,
-    onEditClick: () -> Unit, //lambda function
+    onEditClick: () -> Unit, //lambda Expression
     onDeleteClick: () -> Unit,
 ){
     Row (modifier = Modifier.padding(8.dp).fillMaxWidth().border(
