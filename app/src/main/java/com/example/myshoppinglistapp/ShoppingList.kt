@@ -177,7 +177,6 @@ fun ShoppingItemEditor(item: ShoppingItem, onEditComplete: (String,Int)-> Unit){
     }
 }
 
-
 @Composable
 
 fun ShoppingListItems(
@@ -200,7 +199,6 @@ fun ShoppingListItems(
             }
             IconButton(onClick = onDeleteClick) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-
             }
         }
     }
