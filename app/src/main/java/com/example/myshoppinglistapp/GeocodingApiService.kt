@@ -8,6 +8,6 @@ interface GeocodingApiService {
     @GET("maps/api/geocode/json")
     suspend fun getAddressFromCoordinates(
         @Query("latlng")latlng:String,
-        3@Query("key")apikey:String
+        @Query("key")apikey:String
     ) : GeocodingResponse
 }
