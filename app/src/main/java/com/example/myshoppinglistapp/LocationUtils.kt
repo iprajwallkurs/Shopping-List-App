@@ -1,119 +1,68 @@
 package com.example.myshoppinglistapp
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.app.ActivityCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
+import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
+import android.os.Looper
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.LatLng
+import java.util.Locale
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            val viewModel: LocationViewModel = viewModel()
-            LocationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+class LocationUtils (val context: Context) {
+
+    private val _fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
+
+    @SuppressLint("MissingPermission")
+
+    fun requestLocationUpdates(viewModel: LocationViewModel){
+        val locationCallback = object : LocationCallback() {
+            // The parameter name should start with a lowercase letter
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                locationResult.lastLocation?.let{
+                    val location = LocationData(latitude = it.latitude, longitude = it.longitude)
+                    viewModel.updateLocation(location)
                 }
-                MyApp(viewModel)
             }
         }
-    }
-}
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,1000).build()
 
-@Composable
-
-fun MyApp(viewModel: LocationViewModel){
-    val context = LocalContext.current
-    val locationUtils = LocationUtils(context)
-    LocationDisplay(locationUtils = locationUtils,viewModel = viewModel, context = context)
-}
-
-@Composable
-
-fun LocationDisplay(
-    locationUtils: LocationUtils,
-    viewModel: LocationViewModel,
-    context: Context
-){
-    val location = viewModel.location.value
-
-    val address = location?.let {
-        locationUtils.reverseGeocodeLocation(location)
+        _fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
+    fun hasLocationPermission(context: Context) : Boolean{
 
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions(),
-        onResult = { permissions ->
-            if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION]== true
-                && permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true){
-                //Have access to Location
+        return ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                &&
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
-                locationUtils.requestLocationUpdates(viewModel)
+    }
 
-            }else{
-                //Ask for Permission
-                val rationalRequired = ActivityCompat.shouldShowRequestPermissionRationale(
-                    context as MainActivity,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )||ActivityCompat.shouldShowRequestPermissionRationale(
-                    context as MainActivity,  //we can use main activity here or not it doesn't matter because it was declared in the above segment
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-                if (rationalRequired){
-                    Toast.makeText(context,
-                        "Location permission is required for this feature",Toast.LENGTH_LONG)
-                        .show()
-                }else{
-                    Toast.makeText(context,
-                        "Location permission is required, Kindly enable it in android settings",
-                        Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-
-    Column (modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center){
-
-        if(location != null){
-            Text("Latitude: ${location.latitude} ${location.longitude} \n $address")
+    fun reverseGeocodeLocation(location: LocationData): String{
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val coordinates = LatLng(location.latitude, location.longitude)
+        val addresses : MutableList<Address>? =
+            geocoder.getFromLocation(coordinates.latitude, coordinates.longitude, 1)
+        return if (addresses?.isNotEmpty() == true){
+            addresses[0].getAddressLine(0)
         }else{
-            Text("Location not available")
+            "Address not found"
         }
 
-        Button(onClick = {
-            if (locationUtils.hasLocationPermission(context)){
-                // Permission already granted update the location
-                locationUtils.requestLocationUpdates(viewModel)
-            }else{
-                //Request location permission
-                requestPermissionLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-                )
-            }
-        }) {
-            Text("Get Location")
-        }
     }
+
 }
