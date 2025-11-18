@@ -17,6 +17,7 @@
             android:name="com.google.android.geo.API_KEY"
 
 
+
             />
         <activity
             android:name=".MainActivity"
