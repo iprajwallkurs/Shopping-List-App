@@ -78,12 +78,9 @@ fun Navigation(){
         dialog("locationscreen"){backStackEntry -> viewModel.location.value?.let { it1 ->
 
             LocationSelectionScreen(location = it1,onLocationSelected = {locationData ->
-                viewModel.fetchAddress("${it.latitude},${it.longitude}")
+                viewModel.fetchAddress("${it1.latitude},${it1.longitude}")
                 navController.popBackStack()
             })
         }
-
-            } { }
         }}
     }
-}
