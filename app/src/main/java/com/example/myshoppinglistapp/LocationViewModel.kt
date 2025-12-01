@@ -24,6 +24,11 @@ class LocationViewModel : ViewModel(){
     fun fetchAddress(latlng:String){
         try{
             viewModelScope.launch {
+                val reult = RetrofitClient.create().getAddressFromCoordinates(
+                    latlng = latlng,
+
+                )
+                _address.value = reult.results
             }
             }catch (e:Exception){
                 Log.d("res1","${e.cause}${e.message}")
